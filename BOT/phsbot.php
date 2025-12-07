@@ -321,7 +321,7 @@ JS;
         function field_allowed_domains() {
             $text = implode("\n", self::get_allowed_domains());
             echo '<textarea class="phs-domains" name="'.esc_attr(self::OPTION_KEY).'[allowed_domains]">'.esc_textarea($text).'</textarea>';
-            echo '<p class="description">Uno por línea. Ej: <code>prohuntingspain.com</code> o <code>blog.prohuntingspain.com</code>.</p>';
+            echo '<p class="description">Uno por línea. Ej: <code>tudominio.com</code> o <code>blog.tudominio.com</code>.</p>';
         }
         /* ======== FIN field_allowed_domains ======== */
 
@@ -483,6 +483,20 @@ JS;
 
         /* ======== defaults: Valores por defecto (AMPLIADOS) ======== */
         static function defaults() {
+            // Detectar dominio actual de forma segura
+            $current_domain = '';
+            if (function_exists('home_url')) {
+                $parsed = parse_url(home_url(), PHP_URL_HOST);
+                if ($parsed && is_string($parsed)) {
+                    $current_domain = $parsed;
+                }
+            }
+
+            // Fallback a localhost si no se puede detectar
+            if (empty($current_domain)) {
+                $current_domain = 'localhost';
+            }
+
             return array(
                 'chat_active'        => true,
                 'chat_position'      => 'bottom-right',
@@ -512,7 +526,8 @@ JS;
                 'head_btn_size'      => 26,
                 'mic_stroke_w'       => 1,
 
-                'allowed_domains'    => array('prohuntingspain.com'),
+                // ✅ DINÁMICO: Detecta automáticamente el dominio donde se instala
+                'allowed_domains'    => array($current_domain),
             );
         }
         /* ======== FIN defaults ======== */
