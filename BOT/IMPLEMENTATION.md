@@ -1,5 +1,4 @@
-# PHSBOT - Integración con API5 de Tokens.
-
+test1
 ## 📋 Resumen de Implementación
 
 Se ha transformado el chatbot de autónomo (con OpenAI API key directa) a dependiente de API5 con sistema de licencias basado en tokens.
