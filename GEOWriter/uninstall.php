@@ -19,13 +19,16 @@ global $wpdb;
 // ============================================================================
 
 $tables = array(
+    // Tablas activas
     $wpdb->prefix . 'ap_campaigns',
     $wpdb->prefix . 'ap_queue',
+    $wpdb->prefix . 'ap_locks',
+    $wpdb->prefix . 'ap_nichos',
+
+    // Tablas obsoletas (ya no se crean, pero se limpian por compatibilidad)
     $wpdb->prefix . 'ap_logs',
     $wpdb->prefix . 'ap_token_usage',
-    $wpdb->prefix . 'ap_execution_log',
-    $wpdb->prefix . 'ap_locks',
-    $wpdb->prefix . 'ap_nichos'
+    $wpdb->prefix . 'ap_execution_log'
 );
 
 foreach ($tables as $table) {
