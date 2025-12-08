@@ -1,4 +1,4 @@
-# PHSBOT - Integración con API5 de Tokens
+# PHSBOT - Integración con API5 de Tokens.
 
 ## 📋 Resumen de Implementación
 
