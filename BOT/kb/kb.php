@@ -544,7 +544,7 @@ function phsbot_kb_ajax_generate() {
             $error_note = $body['error']['message'] ?? ('HTTP ' . $http_code);
             // Fallback en cascada (intentar modelos alternativos)
             $alts = (stripos($used_model,'o1')!==false)
-                ? ['o1','gpt-5','gpt-4.1','gpt-4o','o1-mini','gpt-4o-mini']
+                ? ['o1','gpt-5','gpt-4.1','gpt-4o','gpt-4o-mini']
                 : ((stripos($used_model,'gpt-5')!==false)
                     ? ['gpt-4.1','gpt-4o','gpt-4o-mini']
                     : ['gpt-4o','gpt-4o-mini','gpt-4-turbo','gpt-4','gpt-3.5-turbo']);
