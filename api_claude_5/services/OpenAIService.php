@@ -209,7 +209,7 @@ class OpenAIService {
         // - Parámetro 'input' en lugar de 'messages'
         // - NO soportan system_prompt (hay que combinarlo con user prompt)
         // - NO soportan temperature (siempre es 1)
-        // - Usan max_completion_tokens en lugar de max_tokens
+        // - Usan max_output_tokens (antes max_completion_tokens)
 
         // Combinar system prompt con user prompt
         $fullPrompt = $systemPrompt . "\n\n" . $userPrompt;
@@ -218,8 +218,7 @@ class OpenAIService {
         $payload = [
             'model' => $model,
             'input' => $fullPrompt,  // ⭐ CLAVE: 'input' no 'messages'
-            'max_completion_tokens' => $maxTokens
-            // NO incluir temperature para estos modelos
+            'max_output_tokens' => $maxTokens  // ⭐ CLAVE: 'max_output_tokens' no 'max_completion_tokens'
         ];
 
         // Realizar petición al endpoint de Responses API
