@@ -2,9 +2,9 @@
 /**
  * BotLicenseValidator Service
  *
- * Validador específico para licencias del chatbot (prefijo BOT-)
+ * Validador de licencias para el chatbot
  *
- * @version 1.0
+ * @version 1.1
  */
 
 defined('API_ACCESS') or die('Direct access not permitted');
@@ -19,14 +19,6 @@ class BotLicenseValidator {
      * Validar licencia del chatbot
      */
     public function validate($licenseKey, $domain = null) {
-        // Verificar que empiece con BOT-
-        if (strpos($licenseKey, BOT_LICENSE_PREFIX . '-') !== 0) {
-            return [
-                'valid' => false,
-                'reason' => 'Invalid bot license key format. Bot licenses must start with ' . BOT_LICENSE_PREFIX . '-'
-            ];
-        }
-
         $licenseModel = new License();
         $license = $licenseModel->findByKey($licenseKey);
 
