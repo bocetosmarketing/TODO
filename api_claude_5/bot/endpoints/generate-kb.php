@@ -22,13 +22,12 @@ class BotGenerateKBEndpoint {
         $input = Response::getJsonInput();
         $licenseKey = $input['license_key'] ?? null;
         $domain = $input['domain'] ?? null;
-        // IGNORAR el modelo que envíe el plugin - la API decide
         $prompt = $input['prompt'] ?? null;
         $maxTokens = $input['max_tokens'] ?? 8000;
         $temperature = $input['temperature'] ?? 0.2;
 
-        // LA API DECIDE EL MODELO (no el usuario)
-        $model = 'gpt-4o';
+        // LA API DECIDE EL MODELO (no el usuario) - Lee de la configuración de BD
+        $model = $this->getKBModelFromSettings();
 
         if (!$licenseKey) {
             Response::error('license_key is required', 400);
@@ -90,6 +89,24 @@ class BotGenerateKBEndpoint {
             ],
             'model' => $model
         ]);
+    }
+
+    /**
+     * Obtener modelo configurado para KB desde settings
+     */
+    private function getKBModelFromSettings() {
+        try {
+            $db = Database::getInstance();
+            $stmt = $db->prepare("SELECT setting_value FROM " . DB_PREFIX . "settings WHERE setting_key = 'bot_kb_ai_model' LIMIT 1");
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Si existe en BD, usarlo; sino fallback a gpt-4o
+            return $result['setting_value'] ?? 'gpt-4o';
+        } catch (Exception $e) {
+            // Si hay error, usar gpt-4o como fallback
+            return 'gpt-4o';
+        }
     }
 
     /**
