@@ -4,9 +4,9 @@ if (!defined('ABSPATH')) exit;
 add_action('wp_ajax_ap_get_usage', 'ap_get_usage_ajax');
 function ap_get_usage_ajax() {
     ap_verify_ajax_request();
-    
-    $license_key = get_option('ap_license_key', '');
-    
+
+    $license_key = AP_Encryption::get_encrypted_option('ap_license_key', '');
+
     if (empty($license_key)) {
         wp_send_json_error(['message' => 'Configure su licencia primero']);
     }
