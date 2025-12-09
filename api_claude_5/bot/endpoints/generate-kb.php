@@ -22,13 +22,14 @@ class BotGenerateKBEndpoint {
         $input = Response::getJsonInput();
         $licenseKey = $input['license_key'] ?? null;
         $domain = $input['domain'] ?? null;
-        // IGNORAR el modelo que envíe el plugin - la API decide
         $prompt = $input['prompt'] ?? null;
         $maxTokens = $input['max_tokens'] ?? 8000;
         $temperature = $input['temperature'] ?? 0.2;
 
         // LA API DECIDE EL MODELO (no el usuario)
-        $model = 'gpt-4o';
+        // Lee input con fallback por compatibilidad, pero siempre usa gpt-4o
+        $model = $input['model'] ?? 'gpt-4o';
+        $model = 'gpt-4o';  // OVERRIDE: la API controla el modelo
 
         if (!$licenseKey) {
             Response::error('license_key is required', 400);
