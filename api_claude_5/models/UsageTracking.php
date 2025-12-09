@@ -23,9 +23,9 @@ class UsageTracking {
     }
     
     /**
-     * Registrar uso - método estático V5
+     * Registrar uso - método estático V6
      */
-    public static function record($licenseId, $operationType, $tokensTotal, $tokensInput = 0, $tokensOutput = 0, $campaignId = null, $campaignName = null, $batchId = null, $model = 'gpt-4o-mini') {
+    public static function record($licenseId, $operationType, $tokensTotal, $tokensInput = 0, $tokensOutput = 0, $campaignId = null, $campaignName = null, $batchId = null, $model = 'gpt-4o-mini', $endpoint = null) {
         $instance = new self();
 
         // Determinar batch_type según contexto:
@@ -43,6 +43,7 @@ class UsageTracking {
         return $instance->track([
             'license_id' => $licenseId,
             'operation_type' => $operationType,
+            'endpoint' => $endpoint,  // ⭐ Guardar endpoint usado
             'tokens_total' => $tokensTotal,
             'tokens_input' => $tokensInput,
             'tokens_output' => $tokensOutput,

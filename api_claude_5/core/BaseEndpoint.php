@@ -25,6 +25,7 @@ abstract class BaseEndpoint {
     protected $params;
     protected $promptManager;
     protected $openai;
+    protected $endpointName;  // Nombre del endpoint para tracking
 
     /**
      * Constructor - Obtiene parámetros y prepara servicios
@@ -108,8 +109,12 @@ abstract class BaseEndpoint {
             // ⭐ CRÍTICO: Obtener modelo real usado desde el resultado
             $model = $result['model'] ?? $this->params['model'] ?? 'gpt-4o-mini';
 
+            // ⭐ Obtener nombre del endpoint para tracking
+            $endpoint = $this->endpointName ?? $this->getEndpointNameFromClass();
+
             Logger::info('Tracking usage', [
-                'endpoint' => get_class($this),
+                'endpoint' => $endpoint,
+                'class' => get_class($this),
                 'operation' => $operationType,
                 'tokens' => $tokensUsed,
                 'model' => $model,
@@ -127,7 +132,8 @@ abstract class BaseEndpoint {
                 $campaignId,
                 $campaignName,
                 $batchId,
-                $model  // ⭐ Pasar modelo real
+                $model,  // ⭐ Pasar modelo real
+                $endpoint  // ⭐ Pasar endpoint usado
             );
 
             // Actualizar contador de licencia
@@ -139,6 +145,25 @@ abstract class BaseEndpoint {
                 'result_keys' => array_keys($result)
             ]);
         }
+    }
+
+    /**
+     * Extrae el nombre del endpoint desde el nombre de la clase
+     * Ejemplo: GenerateContentEndpoint → generate-content
+     *
+     * @return string
+     */
+    private function getEndpointNameFromClass() {
+        $className = get_class($this);
+
+        // Remover "Endpoint" del final si existe
+        $className = str_replace('Endpoint', '', $className);
+
+        // Convertir CamelCase a kebab-case
+        $endpoint = preg_replace('/([a-z])([A-Z])/', '$1-$2', $className);
+        $endpoint = strtolower($endpoint);
+
+        return $endpoint;
     }
 
     /**
