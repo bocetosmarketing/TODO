@@ -90,7 +90,7 @@ class UsageTracking {
         $data['created_at'] = date('Y-m-d H:i:s');
         $data['sync_status_at_time'] = $data['sync_status_at_time'] ?? 'fresh';
         
-        // ⭐ CALCULAR COSTOS (precios por MILLÓN de tokens)
+        // ⭐ CALCULAR COSTOS (precios por 1.000 tokens)
         $model = $data['model'] ?? 'gpt-4o-mini';
         require_once API_BASE_DIR . '/services/ModelPricingService.php';
         $prices = ModelPricingService::getPrices($model);
@@ -99,8 +99,8 @@ class UsageTracking {
         if (isset($data['tokens_input']) && isset($data['tokens_output'])
             && ($data['tokens_input'] > 0 || $data['tokens_output'] > 0)) {
 
-            $data['cost_input'] = ($data['tokens_input'] / 1000000) * $prices['input'];
-            $data['cost_output'] = ($data['tokens_output'] / 1000000) * $prices['output'];
+            $data['cost_input'] = ($data['tokens_input'] / 1000) * $prices['input'];
+            $data['cost_output'] = ($data['tokens_output'] / 1000) * $prices['output'];
             $data['cost_total'] = $data['cost_input'] + $data['cost_output'];
 
         }
@@ -112,8 +112,8 @@ class UsageTracking {
 
             $data['tokens_input'] = $tokensInput;
             $data['tokens_output'] = $tokensOutput;
-            $data['cost_input'] = ($tokensInput / 1000000) * $prices['input'];
-            $data['cost_output'] = ($tokensOutput / 1000000) * $prices['output'];
+            $data['cost_input'] = ($tokensInput / 1000) * $prices['input'];
+            $data['cost_output'] = ($tokensOutput / 1000) * $prices['output'];
             $data['cost_total'] = $data['cost_input'] + $data['cost_output'];
         }
         
