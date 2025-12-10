@@ -391,35 +391,67 @@ try {
 
         $updated = 0;
         $errors = 0;
+        $error_details = [];
+
+        // Usar prepare/execute directamente en lugar del método query()
+        $stmt = $db->prepare("
+            UPDATE " . DB_PREFIX . "usage_tracking
+            SET
+                cost_input = ?,
+                cost_output = ?,
+                cost_total = ?
+            WHERE id = ?
+        ");
 
         foreach ($records_with_diff as $rec) {
             try {
-                $db->query("
-                    UPDATE " . DB_PREFIX . "usage_tracking
-                    SET
-                        cost_input = ?,
-                        cost_output = ?,
-                        cost_total = ?
-                    WHERE id = ?
-                ", [
+                $success = $stmt->execute([
                     $rec['new_cost_input'],
                     $rec['new_cost_output'],
                     $rec['new_cost_total'],
                     $rec['id']
                 ]);
-                $updated++;
+
+                if ($success && $stmt->rowCount() > 0) {
+                    $updated++;
+                } else {
+                    $errors++;
+                    $error_details[] = "ID {$rec['id']}: No se actualizó ninguna fila";
+                }
             } catch (Exception $e) {
                 $errors++;
-                echo '<div class="warning">ERROR en ID ' . $rec['id'] . ': ' . htmlspecialchars($e->getMessage()) . '</div>';
+                $error_details[] = "ID {$rec['id']}: " . $e->getMessage();
             }
         }
 
-        echo '<div class="success">';
-        echo '<strong>✅ ACTUALIZACIÓN COMPLETADA</strong><br><br>';
-        echo '<strong>Registros actualizados:</strong> ' . $updated . '<br>';
-        echo '<strong>Errores:</strong> ' . $errors . '<br>';
-        echo '<strong>Corrección total:</strong> $' . number_format($total_correction, 5) . '<br>';
-        echo '</div>';
+        if ($updated > 0) {
+            echo '<div class="success">';
+            echo '<strong>✅ ACTUALIZACIÓN COMPLETADA</strong><br><br>';
+            echo '<strong>Registros actualizados:</strong> ' . $updated . '<br>';
+            echo '<strong>Errores:</strong> ' . $errors . '<br>';
+            echo '<strong>Corrección total:</strong> $' . number_format($total_correction, 5) . '<br>';
+            echo '</div>';
+        } else {
+            echo '<div class="warning">';
+            echo '<strong>⚠️ NO SE ACTUALIZÓ NINGÚN REGISTRO</strong><br><br>';
+            echo '<strong>Errores encontrados:</strong> ' . $errors . '<br>';
+            echo '</div>';
+        }
+
+        // Mostrar detalles de errores si los hay
+        if (!empty($error_details)) {
+            echo '<div class="warning">';
+            echo '<strong>Detalles de errores:</strong><br>';
+            echo '<pre style="background: #fff3cd; padding: 10px; overflow-x: auto;">';
+            foreach (array_slice($error_details, 0, 10) as $detail) {
+                echo htmlspecialchars($detail) . "\n";
+            }
+            if (count($error_details) > 10) {
+                echo '... y ' . (count($error_details) - 10) . ' errores más';
+            }
+            echo '</pre>';
+            echo '</div>';
+        }
 
         echo '<div style="margin: 30px 0;">';
         echo '<a href="?" class="button">← Ver Resultado Final</a>';
