@@ -43,7 +43,7 @@ function syncOpenAIPrices($db) {
             return ['success' => false, 'error' => 'Respuesta inválida de OpenAI'];
         }
 
-        // Precios conocidos de OpenAI (Diciembre 2024)
+        // Precios conocidos de OpenAI (Diciembre 2024) - USD por 1.000 tokens
         $knownPrices = [
             'gpt-4o' => ['input' => 0.0025, 'output' => 0.01],
             'gpt-4o-2024-11-20' => ['input' => 0.0025, 'output' => 0.01],
