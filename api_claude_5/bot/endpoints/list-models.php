@@ -116,9 +116,9 @@ class BotListModelsEndpoint {
             ];
         }
 
-        // Ordenar por relevancia
+        // Ordenar por relevancia (solo modelos REALES de OpenAI)
         usort($models, function($a, $b) {
-            $order = ['gpt-4o', 'gpt-4.1', 'gpt-4o-mini', 'gpt-4-turbo', 'gpt-4'];
+            $order = ['gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo', 'gpt-4'];
             $aPos = $bPos = 999;
 
             foreach ($order as $i => $prefix) {

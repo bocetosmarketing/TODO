@@ -146,9 +146,10 @@ try {
     $stmt->execute();
     $availableModels = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-    // Si no hay modelos en BD, usar lista por defecto y avisar
+    // Si no hay modelos en BD, usar lista por defecto SOLO CON MODELOS REALES
     if (empty($availableModels)) {
-        $availableModels = ['gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo', 'gpt-3.5-turbo'];
+        // Solo modelos que EXISTEN en OpenAI (Diciembre 2024)
+        $availableModels = ['gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo', 'gpt-4', 'gpt-3.5-turbo'];
         if (!$error) {
             $error = '⚠️ No hay modelos en la base de datos. <a href="../setup-default-models.php" target="_blank">Ejecuta el script de setup</a> o ve a <a href="?module=models">Modelos OpenAI</a> para agregar modelos.';
         }
@@ -167,7 +168,8 @@ try {
     $bot_ai_tone = 'profesional';
     $bot_ai_max_history = '10';
     $bot_kb_ai_model = 'gpt-4o';
-    $availableModels = ['gpt-4o', 'gpt-4o-mini', 'gpt-4.1', 'gpt-4.1-mini', 'gpt-5', 'gpt-5-mini'];
+    // Solo modelos REALES de OpenAI - NUNCA incluir gpt-4.1, gpt-4.1-mini, gpt-5, etc.
+    $availableModels = ['gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo', 'gpt-4', 'gpt-3.5-turbo'];
 }
 ?>
 
