@@ -230,7 +230,7 @@
 }
 
 /* Textos superpuestos */
-#tokens-available-green,
+#tokens-available-blue,
 #tokens-available-white {
     position: absolute;
     top: 0;
@@ -245,8 +245,8 @@
     pointer-events: none;
 }
 
-/* Texto verde (visible donde NO hay líquido) */
-#tokens-available-green {
+/* Texto negro (visible donde NO hay líquido) */
+#tokens-available-blue {
     color: #000000;
     z-index: 2;
 }
