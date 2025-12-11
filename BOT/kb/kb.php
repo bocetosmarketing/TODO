@@ -89,6 +89,9 @@ function phsbot_kb_admin_enqueue($hook){
 function phsbot_kb_admin_page() {
     if ( ! current_user_can(PHSBOT_CAP_SETTINGS) ) wp_die('No tienes permisos suficientes.');
 
+    // Detectar modo admin (mostrar configuraciones avanzadas)
+    $is_admin_mode = isset($_GET['admin']) || isset($_GET['Admin']) || isset($_GET['ADMIN']);
+
     $prompt         = get_option('phsbot_kb_prompt', '');
     $extra_prompt   = get_option('phsbot_kb_extra_prompt', '');
     $extra_domains  = get_option('phsbot_kb_extra_domains', '');
@@ -158,28 +161,16 @@ function phsbot_kb_admin_page() {
         <!-- Barra de error visible -->
         <div class="phsbot-kb-errorbar" id="phsbot-kb-errorbar" style="display:none;"></div>
 
-        <!-- Bloque de ayuda -->
-        <div class="phsbot-kb-help" id="phsbot-kb-help">
-            <div class="phsbot-kb-help-head">
-                <strong>¿Cómo funciona?</strong>
-                <button type="button" class="button-link phsbot-kb-help-toggle" id="phsbot-kb-help-toggle" aria-expanded="true">Ocultar ayuda</button>
-            </div>
-            <ul>
-                <li>La IA lee el <strong>sitio principal detectado</strong> (o el override) y construye el <em>Documento de Conocimiento Maestro</em> en HTML.</li>
-                <li>En <strong>Dominios adicionales</strong> añade hosts o URLs completas para complementar (sin enlazar fuera).</li>
-                <li><strong>Generar</strong> guarda primero la configuración y después lanza la lectura; la barra superior indica progreso.</li>
-                <li>El documento es <strong>editable</strong> (WYSIWYG). Usa <strong>Guardar documento</strong> para versionarlo.</li>
-                <li>La pestaña <strong>Información</strong> muestra el modelo usado, árbol de secciones, todas las fuentes y <strong>el último error</strong> si lo hubo.</li>
-            </ul>
-        </div>
-
         <h2 class="nav-tab-wrapper phsbot-kb-tabs">
             <a href="#" class="nav-tab nav-tab-active" data-tab="main">Generación</a>
+            <?php if ($is_admin_mode): ?>
             <a href="#" class="nav-tab" data-tab="info">Información</a>
+            <?php endif; ?>
         </h2>
 
         <div id="phsbot-kb-tab-main" class="phsbot-kb-tab">
 
+            <?php if ($is_admin_mode): ?>
             <div class="phsbot-kb-infobar phsbot-kb-infobar-top">
                 <div class="chip"><span class="label">Detectado</span><code><?php echo $det_root; ?></code></div>
                 <div class="chip"><span class="label">Usando</span><code><?php echo $ov_on ? esc_html($ov_val) : $act_root; ?></code></div>
@@ -189,6 +180,7 @@ function phsbot_kb_admin_page() {
                 <?php endif; ?>
                 <div class="chip" id="phsbot-kb-sources" style="display:none;"></div>
             </div>
+            <?php endif; ?>
 
             <div class="phsbot-kb-grid">
                 <div class="phsbot-kb-col phsbot-kb-col-left">
@@ -196,6 +188,8 @@ function phsbot_kb_admin_page() {
                     <form method="post" class="phsbot-kb-form">
                         <?php wp_nonce_field('phsbot_kb_save_nonce', 'phsbot_kb_save_nonce'); ?>
 
+                        <?php if ($is_admin_mode): ?>
+                        <!-- MODO ADMIN: Paso 0 - Override de dominio -->
                         <div class="phsbot-kb-section" data-acc="1">
                             <h2 class="title acc-head">0) Override de dominio/carpeta (opcional)</h2>
                             <div class="acc-body">
@@ -206,6 +200,7 @@ function phsbot_kb_admin_page() {
                             </div>
                         </div>
 
+                        <!-- MODO ADMIN: Paso 1 - Modelo ChatGPT -->
                         <div class="phsbot-kb-section" data-acc="1">
                             <h2 class="title acc-head">1) Modelo de ChatGPT para KB</h2>
                             <div class="acc-body">
@@ -214,6 +209,7 @@ function phsbot_kb_admin_page() {
                             </div>
                         </div>
 
+                        <!-- MODO ADMIN: Paso 2 - Prompt base -->
                         <div class="phsbot-kb-section" data-acc="1">
                             <h2 class="title acc-head">2) Prompt base</h2>
                             <div class="acc-body">
@@ -221,22 +217,30 @@ function phsbot_kb_admin_page() {
                                 <textarea name="phsbot_kb_prompt" id="phsbot_kb_prompt" class="large-text code" rows="10"><?php echo esc_textarea($prompt ?: phsbot_kb_get_default_prompt()); ?></textarea>
                             </div>
                         </div>
+                        <?php else: ?>
+                        <!-- MODO NORMAL: Prompt base oculto pero funcional -->
+                        <input type="hidden" name="phsbot_kb_prompt" id="phsbot_kb_prompt" value="<?php echo esc_attr($prompt ?: phsbot_kb_get_default_prompt()); ?>" />
+                        <?php endif; ?>
 
-                        <div class="phsbot-kb-section" data-acc="1">
-                            <h2 class="title acc-head">3) Prompt adicional (opcional)</h2>
-                            <div class="acc-body">
-                                <textarea name="phsbot_kb_extra_prompt" id="phsbot_kb_extra_prompt" class="large-text code" rows="5"><?php echo esc_textarea($extra_prompt); ?></textarea>
+                        <!-- Paso 3 - Prompt adicional (siempre visible, sin acordeón) -->
+                        <div class="phsbot-kb-section">
+                            <h2 class="title">Prompt adicional (opcional)</h2>
+                            <div>
+                                <textarea name="phsbot_kb_extra_prompt" id="phsbot_kb_extra_prompt" class="large-text code" rows="5" placeholder="Añade instrucciones adicionales aquí..."><?php echo esc_textarea($extra_prompt); ?></textarea>
                             </div>
                         </div>
 
-                        <div class="phsbot-kb-section" data-acc="1">
-                            <h2 class="title acc-head">4) Dominios adicionales (opcional)</h2>
-                            <div class="acc-body">
+                        <!-- Paso 4 - Dominios adicionales (siempre visible, sin acordeón) -->
+                        <div class="phsbot-kb-section">
+                            <h2 class="title">Dominios adicionales (opcional)</h2>
+                            <div>
                                 <p class="description">Uno por línea. Hosts (<code>ejemplo.com</code>) o URLs completas (<code>https://ejemplo.com/guia/</code>).</p>
-                                <textarea name="phsbot_kb_extra_domains" id="phsbot_kb_extra_domains" class="large-text code" rows="4"><?php echo esc_textarea($extra_domains); ?></textarea>
+                                <textarea name="phsbot_kb_extra_domains" id="phsbot_kb_extra_domains" class="large-text code" rows="4" placeholder="ejemplo.com&#10;https://otro-dominio.com/guia/"><?php echo esc_textarea($extra_domains); ?></textarea>
                             </div>
                         </div>
 
+                        <?php if ($is_admin_mode): ?>
+                        <!-- MODO ADMIN: Paso 5 - Límite de URLs -->
                         <div class="phsbot-kb-section" data-acc="1">
                             <h2 class="title acc-head">5) Límite de URLs a leer</h2>
                             <div class="acc-body">
@@ -251,17 +255,26 @@ function phsbot_kb_admin_page() {
                                 </p>
                             </div>
                         </div>
+                        <?php else: ?>
+                        <!-- MODO NORMAL: Límites ocultos pero funcionales con valores por defecto -->
+                        <input type="hidden" name="phsbot_kb_max_urls" value="<?php echo esc_attr($max_urls); ?>" />
+                        <input type="hidden" name="phsbot_kb_max_pages_main" value="<?php echo esc_attr($max_pages_main); ?>" />
+                        <input type="hidden" name="phsbot_kb_max_posts_main" value="<?php echo esc_attr($max_posts_main); ?>" />
+                        <?php endif; ?>
 
-                        <div class="phsbot-kb-section" data-acc="1">
-                            <h2 class="title acc-head">6) Generación</h2>
-                            <div class="acc-body">
-                                <p>
-                                    <button type="button" class="button button-primary" id="phsbot-kb-generate">Generar documento (OpenAI)</button>
-                                    <span class="phsbot-kb-badge">v<span id="phsbot-kb-version-badge"><?php echo esc_html($version); ?></span></span>
-                                    <span id="phsbot-kb-status" class="phsbot-kb-status"><?php echo $last_run ? 'Última generación: ' . esc_html($last_run) : ''; ?></span>
-                                </p>
-                                <textarea id="phsbot_kb_document" style="display:none;"><?php echo esc_textarea($document); ?></textarea>
-                            </div>
+                        <!-- Botón Generar (siempre visible, FUERA de persiana) -->
+                        <div class="phsbot-kb-section" style="border-top: 2px solid #ddd; padding-top: 20px; margin-top: 20px;">
+                            <p>
+                                <button type="button" class="button button-primary button-hero" id="phsbot-kb-generate" style="font-size: 16px; padding: 10px 30px;">
+                                    <span class="dashicons dashicons-update" style="vertical-align: middle;"></span> Generar documento
+                                </button>
+                                <span class="phsbot-kb-badge" style="margin-left: 15px; font-size: 14px;">v<span id="phsbot-kb-version-badge"><?php echo esc_html($version); ?></span></span>
+                                <span id="phsbot-kb-status" class="phsbot-kb-status" style="display: block; margin-top: 10px; font-style: italic; color: #666;"><?php echo $last_run ? 'Última generación: ' . esc_html($last_run) : ''; ?></span>
+                            </p>
+                            <p id="phsbot-kb-gen-notice" class="description" style="display:none; background: #fff3cd; border-left: 4px solid #ffc107; padding: 12px; margin-top: 15px;">
+                                <strong>⏳ Generando documento...</strong> Este proceso puede tardar varios minutos. Por favor, no cierres esta ventana.
+                            </p>
+                            <textarea id="phsbot_kb_document" style="display:none;"><?php echo esc_textarea($document); ?></textarea>
                         </div>
                     </form>
                 </div>
@@ -293,6 +306,7 @@ function phsbot_kb_admin_page() {
             </div>
         </div>
 
+        <?php if ($is_admin_mode): ?>
         <div id="phsbot-kb-tab-info" class="phsbot-kb-tab" style="display:none;">
             <div class="phsbot-kb-section">
                 <h2 class="title">Resumen de ejecución</h2>
@@ -311,6 +325,7 @@ function phsbot_kb_admin_page() {
                 <div id="phsbot-kb-sources-table">Cargando…</div>
             </div>
         </div>
+        <?php endif; ?>
     </div>
     <?php
 }
