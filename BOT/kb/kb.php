@@ -171,6 +171,28 @@ function phsbot_kb_admin_page() {
         <!-- Barra de error visible -->
         <div class="phsbot-kb-errorbar" id="phsbot-kb-errorbar" style="display:none;"></div>
 
+        <!-- Información sobre el proceso -->
+        <div class="notice notice-info" style="margin: 20px 0; padding: 15px; background: #f0f6fc; border-left: 4px solid #0969da;">
+            <h3 style="margin-top: 0; color: #0969da;">📚 ¿Qué es la Base de Conocimiento?</h3>
+            <p style="margin-bottom: 10px;">
+                <strong>Este documento es el cerebro de tu Chatbot.</strong> La IA lee toda la información de tu sitio web y genera automáticamente un documento maestro que el chatbot utilizará para responder a tus clientes.
+            </p>
+            <p style="margin-bottom: 10px;">
+                <strong>🎯 Objetivo:</strong> Proporcionar respuestas precisas y personalizadas basadas en la información real de tu negocio.
+            </p>
+            <div style="background: #fff; padding: 12px; border-radius: 4px; margin-top: 12px; border-left: 3px solid #ffa500;">
+                <strong>⚠️ Importante:</strong> Una vez generado el documento, <strong>revísalo y edítalo</strong> para añadir información que consideres relevante:
+                <ul style="margin: 8px 0 0 20px;">
+                    <li><strong>Precios</strong> de productos o servicios</li>
+                    <li><strong>Promociones</strong> y ofertas especiales</li>
+                    <li><strong>Políticas</strong> de envío, devoluciones o garantías</li>
+                    <li><strong>Horarios</strong> de atención o disponibilidad</li>
+                    <li><strong>Datos de contacto</strong> específicos</li>
+                    <li>Cualquier <strong>información clave</strong> que mejore la atención al cliente</li>
+                </ul>
+            </div>
+        </div>
+
         <h2 class="nav-tab-wrapper phsbot-kb-tabs">
             <a href="#" class="nav-tab nav-tab-active" data-tab="main">Generación</a>
             <?php if ($is_admin_mode): ?>
