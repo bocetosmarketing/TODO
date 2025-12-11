@@ -72,8 +72,8 @@ function phsbot_config_handle_save(){
   $g['chat_width']     = isset($_POST['chat_width'])    ? sanitize_text_field($_POST['chat_width'])    : ($g['chat_width'] ?? '360px');
   $g['chat_height']    = isset($_POST['chat_height'])   ? sanitize_text_field($_POST['chat_height'])   : ($g['chat_height'] ?? '720px');
 
-  $g['color_primary']     = isset($_POST['color_primary'])     ? sanitize_hex_color($_POST['color_primary'])     : ($g['color_primary']     ?? '#667a3a');
-  $g['color_secondary']   = isset($_POST['color_secondary'])   ? sanitize_hex_color($_POST['color_secondary'])   : ($g['color_secondary']   ?? '#4c5e27');
+  $g['color_primary']     = isset($_POST['color_primary'])     ? sanitize_text_field($_POST['color_primary'])     : ($g['color_primary']     ?? 'rgba(0, 0, 0, 0.8)');
+  $g['color_secondary']   = isset($_POST['color_secondary'])   ? sanitize_hex_color($_POST['color_secondary'])   : ($g['color_secondary']   ?? '#808080');
   $g['color_background']  = isset($_POST['color_background'])  ? sanitize_hex_color($_POST['color_background'])  : ($g['color_background']  ?? '#ffffff');
   $g['color_text']        = isset($_POST['color_text'])        ? sanitize_hex_color($_POST['color_text'])        : ($g['color_text']        ?? '#111111');
   $g['color_bot_bubble']  = isset($_POST['color_bot_bubble'])  ? sanitize_hex_color($_POST['color_bot_bubble'])  : ($g['color_bot_bubble']  ?? '#f1f1f2');
@@ -236,8 +236,8 @@ function phsbot_config_render_page(){
   $chat_title     = isset($g['chat_title'])    ? $g['chat_title']    : 'PHSBot';
   $bubble_font_size = isset($g['bubble_font_size']) ? intval($g['bubble_font_size']) : 15;
 
-  $color_primary      = isset($g['color_primary'])      ? $g['color_primary']      : '#667a3a';
-  $color_secondary    = isset($g['color_secondary'])    ? $g['color_secondary']    : '#4c5e27';
+  $color_primary      = isset($g['color_primary'])      ? $g['color_primary']      : 'rgba(0, 0, 0, 0.8)';
+  $color_secondary    = isset($g['color_secondary'])    ? $g['color_secondary']    : '#808080';
   $color_background   = isset($g['color_background'])   ? $g['color_background']   : '#ffffff';
   $color_text         = isset($g['color_text'])         ? $g['color_text']         : '#111111';
   $color_bot_bubble   = isset($g['color_bot_bubble'])   ? $g['color_bot_bubble']   : '#f1f1f2';
@@ -309,7 +309,7 @@ PHSBOT_DEF;
   <div class="wrap phsbot-module-wrap">
     <!-- Header gris estilo GeoWriter -->
     <div class="phsbot-module-header" style="display: flex; justify-content: space-between; align-items: center;">
-      <h1 style="margin: 0;">Configuración</h1>
+      <h1 style="margin: 0; color: rgba(0, 0, 0, 0.8);">Configuración</h1>
     </div>
 
     <?php if (!empty($_GET['updated'])): ?>
@@ -525,72 +525,21 @@ PHSBOT_DEF;
                 <h2 class="phsbot-section-title">Posición y Tamaño</h2>
 
                 <div class="phsbot-field">
-                  <label class="phsbot-label">Posición del Chat</label>
-                  <input type="hidden" name="chat_position" id="chat_position" value="<?php echo esc_attr($chat_position);?>">
-                  <div class="phsbot-position-selector" style="display: flex; justify-content: center; margin: 16px 0;">
-                    <div style="position: relative; width: 280px; height: 180px; background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%); border-radius: 8px; border: 3px solid #ccc; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-                      <!-- Esquina superior izquierda -->
-                      <button type="button" class="phsbot-pos-btn" data-pos="top-left"
-                              style="position: absolute; top: 8px; left: 8px; width: 40px; height: 40px; border-radius: 8px; border: 2px solid #000; background: <?php echo $chat_position === 'top-left' ? '#000' : '#fff'; ?>; cursor: pointer; transition: all 0.2s;"
-                              title="Superior izquierda">
-                        <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: <?php echo $chat_position === 'top-left' ? '#fff' : '#000'; ?>;">
-                          <path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H4V4h16v16z"/>
-                          <circle cx="8" cy="8" r="2"/>
-                        </svg>
-                      </button>
-
-                      <!-- Esquina superior derecha -->
-                      <button type="button" class="phsbot-pos-btn" data-pos="top-right"
-                              style="position: absolute; top: 8px; right: 8px; width: 40px; height: 40px; border-radius: 8px; border: 2px solid #000; background: <?php echo $chat_position === 'top-right' ? '#000' : '#fff'; ?>; cursor: pointer; transition: all 0.2s;"
-                              title="Superior derecha">
-                        <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: <?php echo $chat_position === 'top-right' ? '#fff' : '#000'; ?>;">
-                          <path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H4V4h16v16z"/>
-                          <circle cx="16" cy="8" r="2"/>
-                        </svg>
-                      </button>
-
-                      <!-- Esquina inferior izquierda -->
-                      <button type="button" class="phsbot-pos-btn" data-pos="bottom-left"
-                              style="position: absolute; bottom: 8px; left: 8px; width: 40px; height: 40px; border-radius: 8px; border: 2px solid #000; background: <?php echo $chat_position === 'bottom-left' ? '#000' : '#fff'; ?>; cursor: pointer; transition: all 0.2s;"
-                              title="Inferior izquierda">
-                        <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: <?php echo $chat_position === 'bottom-left' ? '#fff' : '#000'; ?>;">
-                          <path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H4V4h16v16z"/>
-                          <circle cx="8" cy="16" r="2"/>
-                        </svg>
-                      </button>
-
-                      <!-- Esquina inferior derecha -->
-                      <button type="button" class="phsbot-pos-btn" data-pos="bottom-right"
-                              style="position: absolute; bottom: 8px; right: 8px; width: 40px; height: 40px; border-radius: 8px; border: 2px solid #000; background: <?php echo $chat_position === 'bottom-right' ? '#000' : '#fff'; ?>; cursor: pointer; transition: all 0.2s;"
-                              title="Inferior derecha">
-                        <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: <?php echo $chat_position === 'bottom-right' ? '#fff' : '#000'; ?>;">
-                          <path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H4V4h16v16z"/>
-                          <circle cx="16" cy="16" r="2"/>
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
+                  <label class="phsbot-label" for="chat_position">Posición del Chat</label>
+                  <select name="chat_position" id="chat_position" class="phsbot-input-field">
+                    <option value="bottom-right" <?php selected($chat_position, 'bottom-right'); ?>>Abajo derecha</option>
+                    <option value="bottom-left" <?php selected($chat_position, 'bottom-left'); ?>>Abajo izquierda</option>
+                  </select>
+                  <p class="phsbot-description">Selecciona dónde aparecerá el icono y el chat flotante.</p>
                   <script>
                   (function(){
-                    var btns = document.querySelectorAll('.phsbot-pos-btn');
-                    var input = document.getElementById('chat_position');
-                    btns.forEach(function(btn){
-                      btn.addEventListener('click', function(e){
-                        e.preventDefault();
-                        var pos = this.getAttribute('data-pos');
-                        input.value = pos;
-                        // Actualizar estilos
-                        btns.forEach(function(b){
-                          b.style.background = '#fff';
-                          b.querySelector('svg').style.fill = '#000';
-                        });
-                        this.style.background = '#000';
-                        this.querySelector('svg').style.fill = '#fff';
-                        // Actualizar preview si existe
+                    var select = document.getElementById('chat_position');
+                    if(select){
+                      select.addEventListener('change', function(){
                         var preview = document.getElementById('phsbot-preview');
-                        if(preview) preview.setAttribute('data-pos', pos);
+                        if(preview) preview.setAttribute('data-pos', this.value);
                       });
-                    });
+                    }
                   })();
                   </script>
                 </div>
