@@ -60,7 +60,6 @@ $__phsbot_modules = array(
     'estadisticas',
     'integrations',
     'inject',
-    'logs',
     'formuchat',
     'voice_ui',
     'mobile_patch',
