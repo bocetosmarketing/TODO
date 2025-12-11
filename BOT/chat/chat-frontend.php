@@ -80,8 +80,8 @@ add_action('wp_enqueue_scripts', function(){
   $w     = (string) phsbot_setting('chat_width',  '360px');
   $h     = (string) phsbot_setting('chat_height', '720px');
 
-  $c1  = (string) phsbot_setting('color_primary',    '#667a3a');
-  $c2  = (string) phsbot_setting('color_secondary',  '#4c5e27');
+  $c1  = (string) phsbot_setting('color_primary',    'rgba(0, 0, 0, 0.8)');
+  $c2  = (string) phsbot_setting('color_secondary',  '#808080');
   $cbg = (string) phsbot_setting('color_background', '#ffffff');
   $ctx = (string) phsbot_setting('color_text',       '#111111');
   $cb  = (string) phsbot_setting('color_bot_bubble', '#f1f1f2');
@@ -115,6 +115,9 @@ add_action('wp_enqueue_scripts', function(){
       width: var(--phsbot-width);
       max-width: min(92vw, 920px);
       transform: none !important; isolation: isolate;
+    }
+    .phsbot-launcher{
+      <?php echo $pos_x; ?>:18px !important; <?php echo $pos_y; ?>:18px !important;
     }
   </style>
   <?php
