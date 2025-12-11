@@ -1,7 +1,6 @@
 /* PHSBOT – KB Admin JS */
 (function($){
   const KEY_ACC = 'phsbotKBAccState_v2';
-  const KEY_HELP = 'phsbotKBHelpShown_v1';
   let autoPromptCache = { text: (window.phsbotKBData && phsbotKBData.defaultPrompt) || '', root: '' };
   let userEditedPrompt = false;
 
@@ -60,25 +59,6 @@
       if (tab === 'info') {
         loadDebugInfo();
       }
-    });
-  }
-
-  /* ================= Help persistent ================= */
-  function initHelp(){
-    const $help  = $('#phsbot-kb-help');
-    const $toggle= $('#phsbot-kb-help-toggle');
-    const stored = localStorage.getItem(KEY_HELP);
-    const shown  = stored === null ? true : (stored === '1');
-    $help.toggle(shown);
-    $toggle.text(shown ? 'Ocultar ayuda' : 'Mostrar ayuda');
-    $toggle.attr('aria-expanded', shown ? 'true' : 'false');
-
-    $toggle.on('click', function(){
-      const vis = !$help.is(':visible');
-      $help.toggle(vis);
-      $toggle.text(vis ? 'Ocultar ayuda' : 'Mostrar ayuda');
-      $toggle.attr('aria-expanded', vis ? 'true' : 'false');
-      localStorage.setItem(KEY_HELP, vis ? '1':'0');
     });
   }
 
@@ -184,11 +164,15 @@
   $('#phsbot-kb-generate').on('click', function(){
     // Mostrar barra inmediatamente (a la primera)
     topbar(true);
+    // Mostrar aviso informativo
+    $('#phsbot-kb-gen-notice').show();
     // Guardar configuración antes de generar
     saveSettings(function(){
       const model = $('#phsbot_kb_model').val();
       ajax('phsbot_kb_generate', { model: model }, function(d){
         topbar(false);
+        // Ocultar aviso informativo
+        $('#phsbot-kb-gen-notice').hide();
         clearErrorBar(); // éxito → limpiar aviso
 
         // Editor -> poner HTML nuevo
@@ -209,6 +193,8 @@
         loadDebugInfo();
       }, function(err){
         topbar(false);
+        // Ocultar aviso informativo
+        $('#phsbot-kb-gen-notice').hide();
         // Mostrar barra de error con el último error registrado en servidor
         fetchErrorBar();
         alert((err && err.message) || 'Error generando');
@@ -315,7 +301,6 @@
   /* ================= Init ================= */
   $(function(){
     initTabs();
-    initHelp();
     initAccordion();
     initModels();
 
