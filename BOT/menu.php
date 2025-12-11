@@ -135,18 +135,6 @@ add_action('admin_menu', function () {
         );
     }
 
-    // Submenú: Logs
-    if (function_exists('phsbot_render_logs_page')) {
-        add_submenu_page(
-            $menu_slug,
-            'Logs',
-            'Logs',
-            $cap_settings,
-            'phsbot-logs',
-            'phsbot_render_logs_page'
-        );
-    }
-
     // Submenú: Estadísticas
     if (function_exists('phsbot_stats_page')) {
         add_submenu_page(

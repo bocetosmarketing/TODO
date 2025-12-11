@@ -28,14 +28,14 @@
                     </div>
                 </div>
 
-                <!-- Card 2: Gráfico de Evolución (Conversaciones + Tokens) -->
+                <!-- Card 2: Gráfico de Evolución (Conversaciones + Créditos) -->
                 <div class="phsbot-stat-card phsbot-card-chart">
                     <div class="phsbot-card-body">
                         <canvas id="timeline-chart"></canvas>
                     </div>
                 </div>
 
-                <!-- Card 3: Tokens Disponibles (Animación Líquido) -->
+                <!-- Card 3: Créditos Disponibles (Animación Líquido) -->
                 <div class="phsbot-stat-card phsbot-card-tokens-liquid">
                     <div class="phsbot-card-body">
                         <div id="tokens-liquid-container">
@@ -50,14 +50,14 @@
                                 <path id="liquid-wave" fill="url(#liquidGradient)"/>
                             </svg>
                             <!-- Texto negro (visible donde NO hay líquido) -->
-                            <div id="tokens-available-green">
-                                <div class="tokens-number" id="tokens-number-green">0</div>
-                                <div class="tokens-label">tokens disponibles</div>
+                            <div id="tokens-available-blue">
+                                <div class="tokens-number" id="tokens-number-blue">0</div>
+                                <div class="tokens-label">créditos disponibles</div>
                             </div>
                             <!-- Texto blanco (visible donde SÍ hay líquido) -->
                             <div id="tokens-available-white">
                                 <div class="tokens-number" id="tokens-number-white">0</div>
-                                <div class="tokens-label">tokens disponibles</div>
+                                <div class="tokens-label">créditos disponibles</div>
                             </div>
                         </div>
                     </div>

@@ -57,6 +57,9 @@ jQuery(document).ready(function($) {
 
         const renewalText = plan.renewal_date || 'No disponible';
 
+        // Convertir tokens a créditos (1 crédito = 10,000 tokens)
+        const credits_limit = tokensToCredits(summary.tokens_limit);
+
         let html = `
             <div class="phsbot-plan-row">
                 <span class="phsbot-plan-label">Plan</span>
@@ -64,7 +67,7 @@ jQuery(document).ready(function($) {
             </div>
             <div class="phsbot-plan-row">
                 <span class="phsbot-plan-label">Límite mensual</span>
-                <span class="phsbot-plan-value phsbot-number">${formatNumber(summary.tokens_limit)}</span>
+                <span class="phsbot-plan-value phsbot-number">${formatNumber(credits_limit)} créditos</span>
             </div>
             <div class="phsbot-plan-row">
                 <span class="phsbot-plan-label">Renovación</span>
@@ -87,12 +90,15 @@ jQuery(document).ready(function($) {
         const total = summary.tokens_limit;
         const percentage = summary.usage_percentage || 0;
 
-        // Porcentaje de tokens DISPONIBLES (lo que queda)
+        // Porcentaje de créditos DISPONIBLES (lo que queda)
         const availablePercentage = 100 - percentage;
 
+        // Convertir tokens a créditos (1 crédito = 10,000 tokens) con decimales
+        const creditsAvailable = tokensToCredits(available);
+
         // Mostrar número en AMBAS capas
-        const formattedNumber = formatNumber(available);
-        $('#tokens-number-green').text(formattedNumber);
+        const formattedNumber = formatNumber(creditsAvailable);
+        $('#tokens-number-blue').text(formattedNumber);
         $('#tokens-number-white').text(formattedNumber);
 
         // Animar líquido
@@ -231,7 +237,8 @@ jQuery(document).ready(function($) {
         }
 
         const labels = timeline.map(d => d.date_formatted);
-        const tokensData = timeline.map(d => d.tokens);
+        // Convertir tokens a créditos (1 crédito = 10,000 tokens) con decimales
+        const creditsData = timeline.map(d => tokensToCredits(d.tokens));
         const messagesData = timeline.map(d => d.messages);
 
         timelineChart = new Chart(ctx, {
@@ -250,14 +257,14 @@ jQuery(document).ready(function($) {
                         yAxisID: 'y-messages'
                     },
                     {
-                        label: 'Tokens utilizados',
-                        data: tokensData,
-                        borderColor: '#667a3a',
-                        backgroundColor: 'rgba(102, 122, 58, 0.1)',
+                        label: 'Créditos utilizados',
+                        data: creditsData,
+                        borderColor: '#000000',
+                        backgroundColor: 'rgba(0, 0, 0, 0.1)',
                         borderWidth: 2,
                         fill: true,
                         tension: 0.4,
-                        yAxisID: 'y-tokens'
+                        yAxisID: 'y-credits'
                     }
                 ]
             },
@@ -289,13 +296,13 @@ jQuery(document).ready(function($) {
                         },
                         beginAtZero: true
                     },
-                    'y-tokens': {
+                    'y-credits': {
                         type: 'linear',
                         display: true,
                         position: 'right',
                         title: {
                             display: true,
-                            text: 'Tokens'
+                            text: 'Créditos'
                         },
                         beginAtZero: true,
                         grid: {
@@ -322,10 +329,13 @@ jQuery(document).ready(function($) {
         html += '<th style="width:40px;"></th>'; // Columna para el icono
         html += '<th>Tipo de Operación</th>';
         html += '<th class="phsbot-text-right">Operaciones</th>';
-        html += '<th class="phsbot-text-right">Tokens</th>';
+        html += '<th class="phsbot-text-right">Créditos</th>';
         html += '</tr></thead><tbody>';
 
         operations.forEach((op, index) => {
+            // Convertir tokens a créditos con decimales
+            const opCredits = tokensToCredits(op.tokens);
+
             html += '<tr>';
             html += '<td class="phsbot-toggle-cell"></td>'; // No hay toggle para operaciones simples
             html += '<td>';
@@ -334,7 +344,7 @@ jQuery(document).ready(function($) {
             html += '</div>';
             html += '</td>';
             html += '<td class="phsbot-text-right phsbot-number">' + formatNumber(op.count) + '</td>';
-            html += '<td class="phsbot-text-right phsbot-number">' + formatNumber(op.tokens) + '</td>';
+            html += '<td class="phsbot-text-right phsbot-number">' + formatNumber(opCredits) + '</td>';
             html += '</tr>';
         });
 
@@ -353,9 +363,19 @@ jQuery(document).ready(function($) {
         return names[type] || type;
     }
 
+    // Convertir tokens a créditos con decimales
+    function tokensToCredits(tokens) {
+        const credits = tokens / 10000;
+        // Redondear a 1 decimal
+        return Math.round(credits * 10) / 10;
+    }
+
     function formatNumber(num) {
         if (num === null || num === undefined) return '0';
-        return new Intl.NumberFormat('es-ES').format(num);
+        return new Intl.NumberFormat('es-ES', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 1
+        }).format(num);
     }
 
     function escapeHtml(text) {
