@@ -11,6 +11,7 @@
 defined('API_ACCESS') or die('Direct access not permitted');
 
 require_once API_BASE_DIR . '/core/Response.php';
+require_once API_BASE_DIR . '/bot/config.php';
 require_once API_BASE_DIR . '/bot/services/BotLicenseValidator.php';
 require_once API_BASE_DIR . '/bot/services/BotTokenManager.php';
 require_once API_BASE_DIR . '/core/Database.php';
@@ -111,7 +112,7 @@ class BotTranslateWelcomeEndpoint {
                   "<<<" . $text . ">>>";
 
         $payload = [
-            'model' => 'gpt-4o-mini',
+            'model' => BOT_DEFAULT_MODEL,  // Usa modelo configurado en BD (bot_ai_model)
             'temperature' => 0.2,
             'messages' => [
                 ['role' => 'system', 'content' => 'Eres un traductor profesional. Devuelves exclusivamente JSON válido.'],
