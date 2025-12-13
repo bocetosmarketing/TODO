@@ -116,10 +116,17 @@ if ($fs > 22) $fs = 22;
 
 
 <!-- Botón lanzador (solo se muestra en modo flotante por el CSS que inyecta chat.php) -->
+<?php
+// DEBUG: Ver qué valores se están cargando
+$launcher_bg_debug = phsbot_setting('color_launcher_bg', '#1e1e1e');
+$launcher_icon_debug = phsbot_setting('color_launcher_icon', '#ffffff');
+$launcher_text_debug = phsbot_setting('color_launcher_text', '#ffffff');
+error_log('DEBUG LAUNCHER LOAD - BG: ' . $launcher_bg_debug . ' | ICON: ' . $launcher_icon_debug . ' | TEXT: ' . $launcher_text_debug);
+?>
 <button type="button" class="phsbot-launcher" id="phsbot-launcher" aria-label="Abrir chat"
-        style="--phsbot-launcher-bg: <?php echo esc_attr(phsbot_setting('color_launcher_bg', '#1e1e1e')); ?>;
-               --phsbot-launcher-icon: <?php echo esc_attr(phsbot_setting('color_launcher_icon', '#ffffff')); ?>;
-               --phsbot-launcher-text: <?php echo esc_attr(phsbot_setting('color_launcher_text', '#ffffff')); ?>;">
+        style="--phsbot-launcher-bg: <?php echo esc_attr($launcher_bg_debug); ?>;
+               --phsbot-launcher-icon: <?php echo esc_attr($launcher_icon_debug); ?>;
+               --phsbot-launcher-text: <?php echo esc_attr($launcher_text_debug); ?>;">
   <svg class="phsbot-launcher-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
     <!-- Robot cuadrado estilo Conversa -->
     <rect x="5" y="3" width="14" height="16" rx="2" ry="2" fill="currentColor"/>
