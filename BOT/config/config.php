@@ -79,9 +79,10 @@ function phsbot_config_handle_save(){
   $g['color_bot_bubble']    = isset($_POST['color_bot_bubble'])    ? sanitize_hex_color($_POST['color_bot_bubble'])    : ($g['color_bot_bubble']    ?? '#f3f3f3');
   $g['color_user_bubble']   = isset($_POST['color_user_bubble'])   ? sanitize_hex_color($_POST['color_user_bubble'])   : ($g['color_user_bubble']   ?? '#ffffff');
   $g['color_footer']        = isset($_POST['color_footer'])        ? sanitize_hex_color($_POST['color_footer'])        : ($g['color_footer']        ?? '#1e1e1e');
-  $g['color_launcher_bg']   = isset($_POST['color_launcher_bg'])   ? sanitize_text_field($_POST['color_launcher_bg'])   : ($g['color_launcher_bg']   ?? '#1e1e1e');
-  $g['color_launcher_icon'] = isset($_POST['color_launcher_icon']) ? sanitize_text_field($_POST['color_launcher_icon']) : ($g['color_launcher_icon'] ?? '#ffffff');
-  $g['color_launcher_text'] = isset($_POST['color_launcher_text']) ? sanitize_text_field($_POST['color_launcher_text']) : ($g['color_launcher_text'] ?? '#ffffff');
+
+  $g['color_launcher_bg']   = isset($_POST['color_launcher_bg'])   ? sanitize_hex_color($_POST['color_launcher_bg'])   : ($g['color_launcher_bg']   ?? '#1e1e1e');
+  $g['color_launcher_icon'] = isset($_POST['color_launcher_icon']) ? sanitize_hex_color($_POST['color_launcher_icon']) : ($g['color_launcher_icon'] ?? '#ffffff');
+  $g['color_launcher_text'] = isset($_POST['color_launcher_text']) ? sanitize_hex_color($_POST['color_launcher_text']) : ($g['color_launcher_text'] ?? '#ffffff');
 
   $g['btn_height']     = isset($_POST['btn_height'])     ? max(36, min(56, intval($_POST['btn_height'])))           : ($g['btn_height']     ?? 44);
   $g['head_btn_size']  = isset($_POST['head_btn_size'])  ? max(20, min(34, intval($_POST['head_btn_size'])))        : ($g['head_btn_size']  ?? 26);
@@ -646,17 +647,17 @@ PHSBOT_DEF;
 
                   <div class="phsbot-field">
                     <label class="phsbot-label">Color Fondo Botón Chat</label>
-                    <input type="color" name="color_launcher_bg" class="phsbot-input-field" value="<?php echo esc_attr($color_launcher_bg);?>" style="width: 100px; height: 40px;">
+                    <input type="text" name="color_launcher_bg" class="phsbot-color phsbot-input-field" value="<?php echo esc_attr($color_launcher_bg);?>">
                   </div>
 
                   <div class="phsbot-field">
                     <label class="phsbot-label">Color Icono Botón Chat</label>
-                    <input type="color" name="color_launcher_icon" class="phsbot-input-field" value="<?php echo esc_attr($color_launcher_icon);?>" style="width: 100px; height: 40px;">
+                    <input type="text" name="color_launcher_icon" class="phsbot-color phsbot-input-field" value="<?php echo esc_attr($color_launcher_icon);?>">
                   </div>
 
                   <div class="phsbot-field">
                     <label class="phsbot-label">Color Texto Botón Chat</label>
-                    <input type="color" name="color_launcher_text" class="phsbot-input-field" value="<?php echo esc_attr($color_launcher_text);?>" style="width: 100px; height: 40px;">
+                    <input type="text" name="color_launcher_text" class="phsbot-color phsbot-input-field" value="<?php echo esc_attr($color_launcher_text);?>">
                   </div>
                 </div>
               </div>
