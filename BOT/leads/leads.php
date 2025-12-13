@@ -178,7 +178,7 @@ if (!function_exists('phsbot_leads_admin_page')) {
                 $stateC = $closed ? 'closed' : 'open';
                 $page   = esc_attr(phsbot_arr_get($lead,'page',''));
                 $ts     = intval(phsbot_arr_get($lead,'last_seen', time()));
-                $date   = esc_html(date_i18n(get_option('date_format').' '.get_option('time_format'), $ts));
+                $date   = esc_html(date('d/m/Y', $ts));
                 $open   = $closed ? '0' : '1';
 
                 $rows .= '<tr data-cid="'.$cid.'" data-open="'.$open.'">';
