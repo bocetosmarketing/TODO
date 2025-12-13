@@ -13,13 +13,16 @@ class Response {
      * Enviar respuesta exitosa
      */
     public static function success($data = null, $message = null, $code = 200) {
-        // Log successful response
-        Logger::info('Response success', [
-            'code' => $code,
-            'has_data' => $data !== null,
-            'has_message' => $message !== null,
-            'data_keys' => is_array($data) ? array_keys($data) : 'not-array'
-        ]);
+        // Log successful response (excluir monitor/live)
+        $route = $_GET['route'] ?? '';
+        if ($route !== 'monitor/live') {
+            Logger::info('Response success', [
+                'code' => $code,
+                'has_data' => $data !== null,
+                'has_message' => $message !== null,
+                'data_keys' => is_array($data) ? array_keys($data) : 'not-array'
+            ]);
+        }
 
         http_response_code($code);
         header('Content-Type: application/json');

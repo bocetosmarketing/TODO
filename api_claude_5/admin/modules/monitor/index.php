@@ -209,15 +209,56 @@ if (!defined('API_ACCESS')) die('Access denied');
         padding: 60px 20px;
         color: #64748b;
     }
+
+    .control-button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .control-button.play {
+        background: #10b981;
+        color: white;
+    }
+
+    .control-button.play:hover {
+        background: #059669;
+    }
+
+    .control-button.pause {
+        background: #ef4444;
+        color: white;
+    }
+
+    .control-button.pause:hover {
+        background: #dc2626;
+    }
+
+    .live-indicator.paused {
+        background: #94a3b8;
+        animation: none;
+    }
 </style>
 
 <div class="monitor-header">
     <h1>
-        <span class="live-indicator"></span>
+        <span class="live-indicator" id="liveIndicator"></span>
         Monitor en Tiempo Real
     </h1>
-    <div class="monitor-status active" id="status">
-        Actualizando cada 3s
+    <div style="display: flex; align-items: center; gap: 16px;">
+        <div class="monitor-status" id="status">
+            Detenido
+        </div>
+        <button class="control-button play" id="toggleMonitor">
+            <span id="toggleIcon">▶</span>
+            <span id="toggleText">Iniciar</span>
+        </button>
     </div>
 </div>
 
@@ -270,46 +311,92 @@ if (!defined('API_ACCESS')) die('Access denied');
 <script>
     let pollingInterval = null;
     let currentMinutes = 5;
+    let isMonitoring = false;
 
-    // Iniciar al cargar la página
+    // NO iniciar automáticamente - esperar acción del usuario
     document.addEventListener('DOMContentLoaded', function() {
-        fetchData();
-        startPolling();
-
         // Listener para cambio de rango de tiempo
         document.getElementById('time-range').addEventListener('change', function(e) {
             currentMinutes = parseInt(e.target.value);
-            fetchData();
+            if (isMonitoring) {
+                fetchData();
+            }
+        });
+
+        // Listener para botón de toggle
+        document.getElementById('toggleMonitor').addEventListener('click', function() {
+            if (isMonitoring) {
+                stopMonitoring();
+            } else {
+                startMonitoring();
+            }
         });
     });
 
     // Detener polling cuando se cierra/oculta la página
     document.addEventListener('visibilitychange', function() {
-        if (document.hidden) {
-            stopPolling();
-        } else {
-            startPolling();
+        if (document.hidden && isMonitoring) {
+            stopMonitoring();
         }
     });
 
-    function startPolling() {
-        if (pollingInterval) return;
+    function startMonitoring() {
+        if (isMonitoring) return;
+
+        isMonitoring = true;
+        fetchData(); // Fetch inmediato
         pollingInterval = setInterval(fetchData, 3000);
+
+        // Actualizar UI
         updateStatus('Actualizando cada 3s', true);
+        updateToggleButton(true);
+        updateLiveIndicator(true);
     }
 
-    function stopPolling() {
+    function stopMonitoring() {
+        if (!isMonitoring) return;
+
+        isMonitoring = false;
         if (pollingInterval) {
             clearInterval(pollingInterval);
             pollingInterval = null;
-            updateStatus('Pausado', false);
         }
+
+        // Actualizar UI
+        updateStatus('Detenido', false);
+        updateToggleButton(false);
+        updateLiveIndicator(false);
     }
 
     function updateStatus(text, active) {
         const statusEl = document.getElementById('status');
         statusEl.textContent = text;
         statusEl.className = 'monitor-status' + (active ? ' active' : '');
+    }
+
+    function updateToggleButton(active) {
+        const btn = document.getElementById('toggleMonitor');
+        const icon = document.getElementById('toggleIcon');
+        const text = document.getElementById('toggleText');
+
+        if (active) {
+            btn.className = 'control-button pause';
+            icon.textContent = '⏸';
+            text.textContent = 'Pausar';
+        } else {
+            btn.className = 'control-button play';
+            icon.textContent = '▶';
+            text.textContent = 'Iniciar';
+        }
+    }
+
+    function updateLiveIndicator(active) {
+        const indicator = document.getElementById('liveIndicator');
+        if (active) {
+            indicator.className = 'live-indicator';
+        } else {
+            indicator.className = 'live-indicator paused';
+        }
     }
 
     async function fetchData() {
