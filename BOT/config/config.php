@@ -720,6 +720,43 @@ PHSBOT_DEF;
                 </button>
               </div>
             </div>
+
+            <!-- Preview del Botón Launcher -->
+            <div style="margin-top: 30px; padding: 20px; background: #f5f5f5; border-radius: 8px;">
+              <h3 style="margin: 0 0 15px 0; font-size: 14px; font-weight: 600; color: #333;">Vista Previa Botón Chat</h3>
+              <div style="display: flex; justify-content: center; align-items: center; min-height: 100px;">
+                <button type="button" id="phsbot-launcher-preview" class="phsbot-launcher-preview"
+                        style="background: var(--phsbot-launcher-bg, #1e1e1e);
+                               border: 5px solid #ffffff;
+                               border-radius: 23px;
+                               padding: 12px 20px;
+                               cursor: pointer;
+                               display: flex;
+                               align-items: center;
+                               gap: 10px;
+                               box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                               transition: all 0.3s ease;">
+                  <svg class="phsbot-launcher-icon-preview" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                       style="width: 24px; height: 24px; display: block; flex-shrink: 0; color: var(--phsbot-launcher-icon, #ffffff);">
+                    <rect x="5" y="3" width="14" height="16" rx="2" ry="2" fill="currentColor"/>
+                    <rect x="3" y="8" width="2" height="4" rx="1" ry="1" fill="currentColor"/>
+                    <rect x="19" y="8" width="2" height="4" rx="1" ry="1" fill="currentColor"/>
+                    <circle cx="9.5" cy="9" r="1.5" fill="#fff"/>
+                    <circle cx="14.5" cy="9" r="1.5" fill="#fff"/>
+                    <rect x="9" y="13" width="6" height="2" rx="1" ry="1" fill="#fff"/>
+                    <rect x="7" y="19" width="3" height="3" rx="0.5" ry="0.5" fill="currentColor"/>
+                    <rect x="14" y="19" width="3" height="3" rx="0.5" ry="0.5" fill="currentColor"/>
+                  </svg>
+                  <span class="phsbot-launcher-text-preview"
+                        style="color: var(--phsbot-launcher-text, #ffffff);
+                               font-size: 16px;
+                               font-weight: 600;
+                               white-space: nowrap;
+                               line-height: 1;"><?php echo esc_html($chat_title); ?></span>
+                </button>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
