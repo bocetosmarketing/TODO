@@ -23,7 +23,7 @@ $user = Auth::user();
 $module = $_GET['module'] ?? 'dashboard';
 
 // Módulos válidos
-$validModules = ['dashboard', 'licenses', 'sync', 'webhooks', 'plans', 'prompts', 'settings', 'license-stats', 'api-docs', 'models'];
+$validModules = ['dashboard', 'licenses', 'sync', 'webhooks', 'plans', 'prompts', 'settings', 'license-stats', 'api-docs', 'models', 'monitor'];
 if (!in_array($module, $validModules)) {
     $module = 'dashboard';
 }
@@ -261,6 +261,9 @@ try {
                 </a>
                 <a href="?module=license-stats" class="menu-item <?= $module === 'license-stats' ? 'active' : '' ?>">
                     <span class="icon">📈</span> Estadísticas
+                </a>
+                <a href="?module=monitor" class="menu-item <?= $module === 'monitor' ? 'active' : '' ?>">
+                    <span class="icon">🔴</span> Monitor en Vivo
                 </a>
                 <a href="?module=sync" class="menu-item <?= $module === 'sync' ? 'active' : '' ?>">
                     <span class="icon">🔄</span> Sincronización
