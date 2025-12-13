@@ -1,7 +1,12 @@
 /* File: inject/inject.css */
 
 /* ===== FRONT: bloque inyectado ===== */
-.phsbot-inject-block { width: 100%; }
+.phsbot-inject-block {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  box-sizing: border-box;
+}
 .phsbot-inject-html  { width: 100%; box-sizing: border-box; }
 .phsbot-inject-html img { max-width: 100%; height: auto; display: block; }
 .phsbot-inject-html iframe,
