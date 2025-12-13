@@ -204,6 +204,87 @@ function phsbot_chat_opt($keys, $def=null){
   return $cur;
 }
 
+/* -- Renderizar tarjeta de producto WooCommerce -- */
+if (!function_exists('phsbot_render_product_card')) {
+function phsbot_render_product_card($product){
+  $name = esc_html($product->get_name());
+  $price = $product->get_price_html();
+  $url = esc_url($product->get_permalink());
+  $img_id = $product->get_image_id();
+  $img_url = $img_id ? wp_get_attachment_image_url($img_id, 'medium') : '';
+
+  ob_start();
+  ?>
+  <div class="phsbot-product-card" style="border:1px solid #e0e0e0;border-radius:8px;padding:14px;margin:12px 0;display:flex;gap:14px;align-items:center;background:#fff;">
+    <?php if($img_url): ?>
+      <img src="<?php echo esc_url($img_url); ?>"
+           alt="<?php echo $name; ?>"
+           style="width:80px;height:80px;object-fit:cover;border-radius:6px;flex-shrink:0;">
+    <?php endif; ?>
+
+    <div style="flex:1;min-width:0;">
+      <h4 style="margin:0 0 8px 0;font-size:16px;font-weight:600;color:#333;"><?php echo $name; ?></h4>
+      <div style="margin:8px 0;font-size:18px;font-weight:700;color:#0073aa;"><?php echo $price; ?></div>
+      <a href="<?php echo $url; ?>"
+         target="_blank"
+         class="button phsbot-product-btn"
+         style="display:inline-block;margin-top:8px;padding:8px 16px;background:#0073aa;color:#fff;text-decoration:none;border-radius:4px;font-size:14px;font-weight:500;">
+        Ver producto →
+      </a>
+    </div>
+  </div>
+  <?php
+  return ob_get_clean();
+}
+}
+
+/* -- Convertir URLs de productos a tarjetas visuales -- */
+if (!function_exists('phsbot_convert_product_urls_to_cards')) {
+function phsbot_convert_product_urls_to_cards($text){
+  if(!class_exists('WooCommerce')) return $text;
+
+  // Obtener dominio(s) válido(s)
+  $site_url = home_url();
+  $site_host = parse_url($site_url, PHP_URL_HOST);
+
+  // Soportar www y sin www
+  $hosts = array(
+    preg_quote($site_host, '#'),
+    preg_quote(str_replace('www.', '', $site_host), '#'),
+    preg_quote('www.'.$site_host, '#')
+  );
+  $host_pattern = implode('|', array_unique($hosts));
+
+  // Detectar URLs del sitio (con parámetros opcionales)
+  $pattern = '#https?://(?:'.$host_pattern.')[^\s<>"]*#i';
+
+  return preg_replace_callback($pattern, function($matches){
+    $url = $matches[0];
+    $clean_url = preg_replace('/[?#].*$/', '', $url); // Remover query params
+    $clean_url = rtrim($clean_url, '/');
+
+    // Intentar convertir URL a post ID
+    $post_id = url_to_postid($clean_url);
+
+    // Fallback: intentar con trailing slash
+    if(!$post_id){
+      $post_id = url_to_postid($clean_url . '/');
+    }
+
+    // Verificar que sea producto de WooCommerce
+    if($post_id && get_post_type($post_id) === 'product'){
+      $product = wc_get_product($post_id);
+      if($product && $product->get_status() === 'publish'){
+        return phsbot_render_product_card($product);
+      }
+    }
+
+    // No es producto → devolver URL original sin modificar
+    return $url;
+  }, $text);
+}
+}
+
 /* ===== AJAX hooks ===== */
 add_action('wp_ajax_phsbot_chat','phsbot_ajax_chat');
 add_action('wp_ajax_nopriv_phsbot_chat','phsbot_ajax_chat');
@@ -400,6 +481,9 @@ function phsbot_ajax_chat(){
   if (empty($txt)) {
     wp_send_json(array('ok'=>false,'error'=>'La API no devolvió respuesta'));
   }
+
+  // Convertir URLs de productos a tarjetas visuales (si WooCommerce está activo)
+  $txt = phsbot_convert_product_urls_to_cards($txt);
 
   $allow_html = !empty($chat['allow_html']) || !empty(phsbot_chat_opt(array('allow_html')));
   $html       = $allow_html ? wp_kses_post($txt) : esc_html($txt);
