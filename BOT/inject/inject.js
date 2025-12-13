@@ -67,11 +67,24 @@
     });
   }
 
-  function buildInjectBlock(html){
+  function buildInjectBlock(html, disableAutoplay){
     var w=document.createElement('div'); w.className='phsbot-inject-block'; w.style.width='100%';
     var i=document.createElement('div'); i.className='phsbot-inject-html'; i.style.width='100%'; i.innerHTML=html||'';
+
+    // Si disableAutoplay está activo, quitar autoplay de todos los iframes de YouTube
+    if(disableAutoplay){
+      qsa('iframe', i).forEach(function(ifr){
+        var src = ifr.getAttribute('src') || '';
+        if(/youtube\.com\/embed/.test(src)){
+          // Cambiar autoplay=1 a autoplay=0
+          src = src.replace(/([?&])autoplay=1/g, '$1autoplay=0');
+          ifr.setAttribute('src', src);
+        }
+      });
+    }
+
     w.appendChild(i); ensureEmbedSize(w);
-    // Evita “salto” hacia arriba
+    // Evita "salto" hacia arriba
     pinToBottomSeries();
     // Reajusta cuando cargan imágenes/iframes/video
     qsa('img,iframe,video', w).forEach(function(m){
@@ -249,7 +262,7 @@
         if(r.place === 'after'){
           pendingAfter.push({html:r.html});
         } else {
-          after(u,buildInjectBlock(r.html||''));
+          after(u,buildInjectBlock(r.html||'', isHistoricMessage));
           if(r.place === 'only') suppressNextBot = Math.max(1, suppressNextBot+1);
         }
         fired=true;
@@ -296,7 +309,7 @@
               suppressNextBot--; return;
             }
             if(pendingAfter.length){
-              pendingAfter.forEach(function(it){ after(n, buildInjectBlock(it.html||'')); });
+              pendingAfter.forEach(function(it){ after(n, buildInjectBlock(it.html||'', false)); });
               pendingAfter.length = 0;
             }
             pinToBottomSeries();
