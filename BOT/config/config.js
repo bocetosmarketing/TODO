@@ -56,9 +56,10 @@
     bindColor('color_user_bubble', '--phsbot-user-bubble');
     bindColor('color_whatsapp',    '--phsbot-whatsapp');
     bindColor('color_footer',      '--phsbot-footer');
-    bindColor('color_launcher_bg', '--phsbot-launcher-bg');
-    bindColor('color_launcher_icon', '--phsbot-launcher-icon');
-    bindColor('color_launcher_text', '--phsbot-launcher-text');
+    // Los colores del launcher NO usan bindColor - solo fallback wpColorPicker
+    // bindColor('color_launcher_bg', '--phsbot-launcher-bg');
+    // bindColor('color_launcher_icon', '--phsbot-launcher-icon');
+    // bindColor('color_launcher_text', '--phsbot-launcher-text');
 
     // --- Slider bind helper (con hook onUpdate opcional) ---
     function bindSlider(id, cssVar, unit, hiddenId, onUpdate){
@@ -116,7 +117,7 @@
 // Fallback: inicializa cualquier .phsbot-color suelto (excluye los que ya tienen bindColor)
 jQuery(function($){
   if ($.fn.wpColorPicker) {
-    $('.phsbot-color').not('[name="color_primary"], [name="color_secondary"], [name="color_background"], [name="color_text"], [name="color_bot_bubble"], [name="color_user_bubble"], [name="color_whatsapp"], [name="color_footer"], [name="color_launcher_bg"], [name="color_launcher_icon"], [name="color_launcher_text"]').wpColorPicker();
+    $('.phsbot-color').not('[name="color_primary"], [name="color_secondary"], [name="color_background"], [name="color_text"], [name="color_bot_bubble"], [name="color_user_bubble"], [name="color_whatsapp"], [name="color_footer"]').wpColorPicker();
   }
 
   // --- Validar Licencia del Bot ---
