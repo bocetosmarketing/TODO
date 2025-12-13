@@ -153,6 +153,13 @@ $router->post('reset-stats', function() {
     $controller->resetStats();
 });
 
+// Monitor en tiempo real
+$router->get('monitor/live', function() {
+    require_once API_BASE_DIR . '/endpoints/MonitorLiveEndpoint.php';
+    $endpoint = new MonitorLiveEndpoint();
+    $endpoint->handle();
+});
+
 // ============================================================================
 // WEBHOOKS
 // ============================================================================
