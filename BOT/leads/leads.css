@@ -1,9 +1,15 @@
 /* PHSBOT – Leads Admin Styles (accordion detail) */
 
+/* Quitar sombra superior del módulo */
+.phsbot-module-content {
+  box-shadow: 0 0 0 rgba(0,0,0,0) !important;
+}
+
 /* Tabs - estilo redondeado pegado al contenido */
 .nav-tab-wrapper {
   border-bottom: none !important;
   margin-bottom: 0 !important;
+  margin-left: 20px !important;
   padding-top: 0 !important;
   display: flex;
   gap: 8px;
@@ -32,15 +38,25 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.phsbot-wrap .phsbot-leads-toolbar{display:flex;gap:10px;align-items:center;margin:16px 0 20px;flex-wrap:wrap}
-#phsbot-leads-search{min-width:320px;max-width:520px;padding:6px 8px}
+.phsbot-wrap .phsbot-leads-toolbar{display:flex;gap:10px;align-items:center;margin:16px 0 30px;flex-wrap:wrap}
+#phsbot-leads-search{min-width:320px;max-width:520px;padding:8px 12px;height:36px;box-sizing:border-box}
 .phsbot-switch{display:inline-flex;gap:8px;align-items:center}
+
+/* Igualar altura de botones en toolbar */
+.phsbot-leads-toolbar .button {
+  height: 36px;
+  padding: 0 14px !important;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+}
 
 /* Botones toolbar con estilos específicos */
 #phsbot-leads-purge {
   background: #555 !important;
   color: #fff !important;
   border-color: #555 !important;
+  border-radius: 4px !important;
 }
 
 #phsbot-leads-purge:hover {
@@ -52,11 +68,24 @@
   background: #999 !important;
   color: #fff !important;
   border-color: #999 !important;
+  border-radius: 4px !important;
 }
 
 #phsbot-leads-reset-browser:hover {
   background: #777 !important;
   border-color: #777 !important;
+}
+
+#phsbot-leads-refresh {
+  background: #fff !important;
+  color: #000 !important;
+  border: none !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+  border-radius: 4px !important;
+}
+
+#phsbot-leads-refresh:hover {
+  background: #f5f5f5 !important;
 }
 
 /* Tabla moderna sin bordes */
@@ -167,7 +196,7 @@
 .phsbot-del {
   background: #fff !important;
   color: #dc3232 !important;
-  border: 1px solid #dc3232 !important;
+  border: 1px solid #ccc !important;
 }
 
 .phsbot-del:hover {
