@@ -36,11 +36,14 @@ session_start();
 $route = $_GET['route'] ?? '';
 $router = new Router();
 
-Logger::api('info', 'Incoming request', [
-    'method' => $_SERVER['REQUEST_METHOD'],
-    'route' => $route,
-    'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown'
-]);
+// Log de peticiones (excluir monitor/live para no ensuciar logs)
+if ($route !== 'monitor/live') {
+    Logger::api('info', 'Incoming request', [
+        'method' => $_SERVER['REQUEST_METHOD'],
+        'route' => $route,
+        'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown'
+    ]);
+}
 
 // ============================================================================
 // CAPA DE COMPATIBILIDAD V4 (Plugin WordPress)
