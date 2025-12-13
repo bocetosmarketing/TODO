@@ -121,7 +121,24 @@ function phsbot_config_handle_save(){
     $g['chat_title'] = ($val === '') ? 'PHSBot' : $val;
   }
 
-  update_option(PHSBOT_SETTINGS_OPT, $g);
+  // DEBUG: Ver qué hay en $g antes de update_option
+  $debug_info .= "Antes de update_option - valores en \$g:\n";
+  $debug_info .= "  \$g['color_launcher_bg']: " . var_export($g['color_launcher_bg'] ?? 'NOT IN ARRAY', true) . "\n";
+  $debug_info .= "  \$g['color_launcher_icon']: " . var_export($g['color_launcher_icon'] ?? 'NOT IN ARRAY', true) . "\n";
+  $debug_info .= "  \$g['color_launcher_text']: " . var_export($g['color_launcher_text'] ?? 'NOT IN ARRAY', true) . "\n";
+  file_put_contents($debug_log, $debug_info, FILE_APPEND);
+
+  $update_result = update_option(PHSBOT_SETTINGS_OPT, $g);
+
+  // DEBUG: Verificar si update_option funcionó
+  $debug_check = date('Y-m-d H:i:s') . " - update_option result: " . var_export($update_result, true) . "\n";
+  $saved = get_option(PHSBOT_SETTINGS_OPT, array());
+  $debug_check .= "Después de update_option - valores en BD:\n";
+  $debug_check .= "  saved['color_launcher_bg']: " . var_export($saved['color_launcher_bg'] ?? 'NOT IN DB', true) . "\n";
+  $debug_check .= "  saved['color_launcher_icon']: " . var_export($saved['color_launcher_icon'] ?? 'NOT IN DB', true) . "\n";
+  $debug_check .= "  saved['color_launcher_text']: " . var_export($saved['color_launcher_text'] ?? 'NOT IN DB', true) . "\n";
+  $debug_check .= str_repeat('=', 50) . "\n\n";
+  file_put_contents($debug_log, $debug_check, FILE_APPEND);
 
   // -------- Ajustes del Chat (IA) --------
   $c = get_option(PHSBOT_CHAT_OPT, array()); if (!is_array($c)) $c = array();
