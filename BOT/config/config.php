@@ -145,6 +145,10 @@ function phsbot_config_handle_save(){
   // Limpiar caché antes de update_option (por si acaso)
   wp_cache_delete(PHSBOT_SETTINGS_OPT, 'options');
 
+  // DEBUG: Mostrar todas las claves en $g antes de guardar
+  $debug_keys_before = "Claves en \$g antes de update_option:\n" . implode(", ", array_keys($g)) . "\n";
+  file_put_contents($debug_log, $debug_keys_before, FILE_APPEND);
+
   $update_result = update_option(PHSBOT_SETTINGS_OPT, $g, true);  // tercer parámetro = autoload
 
   // DEBUG: Verificar si update_option funcionó
@@ -159,6 +163,7 @@ function phsbot_config_handle_save(){
   $debug_check .= "  saved['color_launcher_icon']: " . var_export($saved['color_launcher_icon'] ?? 'NOT IN DB', true) . "\n";
   $debug_check .= "  saved['color_launcher_text']: " . var_export($saved['color_launcher_text'] ?? 'NOT IN DB', true) . "\n";
   $debug_check .= "  TOTAL elementos en \$saved: " . count($saved) . "\n";
+  $debug_check .= "Claves en \$saved después de update_option:\n" . implode(", ", array_keys($saved)) . "\n";
   $debug_check .= str_repeat('=', 50) . "\n\n";
   file_put_contents($debug_log, $debug_check, FILE_APPEND);
 
