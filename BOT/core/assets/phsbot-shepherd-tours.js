@@ -209,7 +209,7 @@
         tour.addStep({
             id: 'welcome',
             title: '🎨 Aspecto Visual',
-            text: 'Personaliza completamente la apariencia del chatbot para que combine con tu marca.',
+            text: 'Personaliza completamente la apariencia del chatbot para que combine con tu marca. Verás una vista previa en tiempo real!',
             buttons: [
                 {
                     text: 'Siguiente',
@@ -222,7 +222,7 @@
         tour.addStep({
             id: 'position',
             title: '📍 Posición del Chat',
-            text: 'Elige dónde aparecerá el botón del chatbot en tu web: abajo derecha, abajo izquierda, etc.',
+            text: 'Elige dónde aparecerá el botón del chatbot en tu web: abajo derecha, abajo izquierda, arriba, etc.',
             attachTo: { element: '#chat_position', on: 'bottom' },
             buttons: [
                 {
@@ -239,10 +239,10 @@
         });
 
         tour.addStep({
-            id: 'colors',
-            title: '🎨 Colores Personalizados',
-            text: 'Ajusta todos los colores: primario, secundario, fondo, burbujas, etc. Usa los selectores para visualizar los cambios en tiempo real.',
-            attachTo: { element: '#color_primary', on: 'bottom' },
+            id: 'title-and-font',
+            title: '✏️ Título y Fuente',
+            text: 'Personaliza el título que aparece en la cabecera del chat y el tamaño de fuente de los mensajes (12-22px).',
+            attachTo: { element: '#chat_title', on: 'bottom' },
             buttons: [
                 {
                     text: 'Atrás',
@@ -258,9 +258,85 @@
         });
 
         tour.addStep({
-            id: 'launcher',
-            title: '🚀 Botón Launcher',
-            text: 'Personaliza el botón que abre el chat: color de fondo, icono y texto. Estos colores se aplican al botón flotante.',
+            id: 'size',
+            title: '📐 Ancho y Alto',
+            text: 'Ajusta las dimensiones del chat. Ancho: 260-920px, Alto: 420-960px. Usa los sliders para ver los cambios en tiempo real.',
+            attachTo: { element: '#chat_width_slider', on: 'bottom' },
+            buttons: [
+                {
+                    text: 'Atrás',
+                    action: tour.back,
+                    classes: 'shepherd-button-secondary'
+                },
+                {
+                    text: 'Siguiente',
+                    action: tour.next,
+                    classes: 'shepherd-button-primary'
+                }
+            ]
+        });
+
+        tour.addStep({
+            id: 'color-primary',
+            title: '🎨 Color Primario',
+            text: 'Color principal del chat (cabecera y elementos destacados). Este color define la identidad visual del chatbot.',
+            attachTo: { element: 'input[name="color_primary"]', on: 'bottom' },
+            buttons: [
+                {
+                    text: 'Atrás',
+                    action: tour.back,
+                    classes: 'shepherd-button-secondary'
+                },
+                {
+                    text: 'Siguiente',
+                    action: tour.next,
+                    classes: 'shepherd-button-primary'
+                }
+            ]
+        });
+
+        tour.addStep({
+            id: 'color-bubbles',
+            title: '💬 Colores de Burbujas',
+            text: 'Define los colores de las burbujas de mensajes: una para los mensajes del bot y otra para los del usuario.',
+            attachTo: { element: 'input[name="color_bot_bubble"]', on: 'bottom' },
+            buttons: [
+                {
+                    text: 'Atrás',
+                    action: tour.back,
+                    classes: 'shepherd-button-secondary'
+                },
+                {
+                    text: 'Siguiente',
+                    action: tour.next,
+                    classes: 'shepherd-button-primary'
+                }
+            ]
+        });
+
+        tour.addStep({
+            id: 'color-launcher',
+            title: '🚀 Colores del Botón Flotante',
+            text: 'Personaliza el botón flotante que abre el chat: fondo, icono y texto. Estos colores se aplican al botón que verán tus visitantes.',
+            attachTo: { element: 'input[name="color_launcher_bg"]', on: 'bottom' },
+            buttons: [
+                {
+                    text: 'Atrás',
+                    action: tour.back,
+                    classes: 'shepherd-button-secondary'
+                },
+                {
+                    text: 'Siguiente',
+                    action: tour.next,
+                    classes: 'shepherd-button-primary'
+                }
+            ]
+        });
+
+        tour.addStep({
+            id: 'preview',
+            title: '👀 Vista Previa',
+            text: '¡Fíjate en la vista previa de la derecha! Todos los cambios que hagas se reflejan en tiempo real. Cuando estés satisfecho, guarda la configuración.',
             buttons: [
                 {
                     text: 'Atrás',
