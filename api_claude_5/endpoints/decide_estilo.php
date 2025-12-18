@@ -47,15 +47,27 @@ class DecideEstiloEndpoint extends BaseEndpoint {
         $content = trim($result['content']);
 
         // Limpiar markdown code blocks si existen
-        $content = preg_replace('/^```json\s*/', '', $content);
-        $content = preg_replace('/\s*```$/', '', $content);
+        $content = preg_replace('/^```json\s*/m', '', $content);
+        $content = preg_replace('/^```\s*/m', '', $content);
+        $content = preg_replace('/\s*```$/m', '', $content);
+
+        // Intentar extraer solo el JSON si hay texto adicional
+        // Buscar desde la primera { hasta la última }
+        if (preg_match('/\{.*\}/s', $content, $matches)) {
+            $content = $matches[0];
+        }
+
         $content = trim($content);
 
         // Parsear JSON
         $styles = json_decode($content, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            Response::error('Error parseando JSON de la respuesta: ' . json_last_error_msg(), 500);
+            // Log del contenido para debugging
+            error_log('[DecideEstilo] Content recibido: ' . substr($content, 0, 500));
+            error_log('[DecideEstilo] JSON error: ' . json_last_error_msg());
+
+            Response::error('Error parseando JSON de la respuesta: ' . json_last_error_msg() . '. Content: ' . substr($content, 0, 200), 500);
         }
 
         // Validar que contenga los 8 estilos esperados

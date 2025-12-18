@@ -99,8 +99,28 @@ EJEMPLOS DE BUENAS DESCRIPCIONES:
 }
 ```
 
-IMPORTANTE:
-- Genera SOLO el JSON con las 8 descripciones
-- Sin explicaciones adicionales
-- Sin comentarios
-- Asegúrate de que el JSON sea válido
+IMPORTANTE - FORMATO DE RESPUESTA:
+Tu respuesta debe ser ÚNICAMENTE el objeto JSON, sin ningún texto adicional.
+NO incluyas:
+- Explicaciones antes o después del JSON
+- Bloques de código markdown (```json ... ```)
+- Comentarios
+- Texto introductorio
+
+CORRECTO:
+{
+  "lifestyle": "...",
+  "technical": "...",
+  ...
+}
+
+INCORRECTO:
+Aquí está el JSON solicitado:
+```json
+{
+  "lifestyle": "...",
+  ...
+}
+```
+
+Responde SOLO con el objeto JSON válido empezando con { y terminando con }
